@@ -18,6 +18,7 @@ module.exports = {
                 })
                 return;
             }
+            
             //blog 생성 성공
             const blog = {
                 blogIdx,
