@@ -3,14 +3,14 @@ const statusCode = require('../module/statusCode');
 const responseMessage = require('../module/responseMessage');
 const pool = require('../module/poolAsync');
 
-module.exports = {
-    //blog 생성
-    create: ({blogName, writerIdx}) => {
-        const table = 'blog';
-        const fields = 'blogName, writerIdx';
-        const questions = `?, ?`;
+const article = {
+    //article 생성
+    create: ({title, content, blogIdx}) => {
+        const table = 'article';
+        const fields = 'title, content, blogIdx';
+        const questions = `?, ?, ?`;
         const query = `INSERT INTO ${table}(${fields}) VALUES(${questions})`;
-        const values = [blogName, writerIdx];
+        const values = [title, content, blogIdx];
         return pool.queryParam_Parse(query, values)
         .then(result => {
             const insertId = result.insertId;
@@ -32,14 +32,14 @@ module.exports = {
             throw err;
         })
     },
-    //특정 blog 조회
-    read: ({blogIdx}) => {
-        const table = 'blog';
-        const query = `SELECT * FROM ${table} WHERE blogIdx = ${blogIdx}`;
+    //특정 article 조회
+    read: ({blogIdx, articleIdx}) => {
+        const table = 'article';
+        const query = `SELECT * FROM ${table} WHERE blogIdx = ${blogIdx} AND articleIdx = ${articleIdx}`;
         return pool.queryParam_None(query)
         .then(result => {
-            const blog = result[0];
-            if(!blog){
+            const article = result[0];
+            if(!article){
                 return {
                     code: statusCode.BAD_REQUEST,
                     json: authUtil.successFalse(responseMessage.NO_BOARD)
@@ -47,7 +47,7 @@ module.exports = {
             }
             return {
                 code: statusCode.OK,
-                json: authUtil.successTrue(responseMessage.BOARD_CREATE_SUCCESS, blog)
+                json: authUtil.successTrue(responseMessage.BOARD_CREATE_SUCCESS, article)
             }
         })
         .catch(err => {
@@ -55,9 +55,9 @@ module.exports = {
             throw err;
         })
     },
-    //모든 blog 조회
+    //모든 article 조회
     readAll: () => {
-        const table = 'blog';
+        const table = 'article';
         const query = `SELECT * FROM ${table}`;
         return pool.queryParam_None(query)
         .then(result => {
@@ -71,10 +71,10 @@ module.exports = {
             throw err;
         })
     },
-    //blog 수정
-    update: ({blogIdx, blogName}) => {
-        const table = 'blog';
-        const query = `UPDATE ${table} SET blogName = '${blogName}' WHERE blogIdx = ${blogIdx}`;
+    //article 수정
+    update: ({blogIdx, articleIdx, title, content}) => {
+        const table = 'article';
+        const query = `UPDATE ${table} SET title = '${title}', content = '${content}' WHERE blogIdx = ${blogIdx} AND articleIdx = ${articleIdx}`;
         return pool.queryParam_None(query)
         .then(result => {
             console.log(result);
@@ -89,9 +89,9 @@ module.exports = {
         });
     },
     //blog 삭제
-    delete: ({blogIdx}) => {
-        const table = 'blog';
-        const query = `DELETE FROM ${table} WHERE blogIdx = ${blogIdx}`;
+    delete: ({blogIdx, articleIdx}) => {
+        const table = 'article';
+        const query = `DELETE FROM ${table} WHERE blogIdx = ${blogIdx} AND articleIdx = ${articleIdx}`;
         return pool.queryParam_None(query)
         .then(result => {
             console.log(result);
@@ -106,3 +106,5 @@ module.exports = {
         });
     }
 };
+
+module.exports = article;
