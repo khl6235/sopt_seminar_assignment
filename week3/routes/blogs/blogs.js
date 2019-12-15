@@ -48,13 +48,14 @@ router.post('/', (req, res) => {
 });
 
 router.put('/', (req, res) => {
-    const {blogIdx, blogName} = req.body;
-    if(!blogIdx || !blogName){
+    const {blogName, blogIdx} = req.body;
+    if(!blogName || !blogIdx){
+        console.log("here");
         res.status(statusCode.BAD_REQUEST)
         .send(authUtil.successFalse(responseMessage.NULL_VALUE));
         return;
     }
-    Blog.update({blogIdx, blogName})
+    Blog.update({blogName, blogIdx})
     .then(({code, json}) => {
         res.status(code).send(json);
     }).catch(err => {

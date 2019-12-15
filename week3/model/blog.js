@@ -72,7 +72,7 @@ module.exports = {
         })
     },
     //blog 수정
-    update: ({blogIdx, blogName}) => {
+    update: ({blogName, blogIdx}) => {
         const table = 'blog';
         const query = `UPDATE ${table} SET blogName = '${blogName}' WHERE blogIdx = ${blogIdx}`;
         return pool.queryParam_None(query)
