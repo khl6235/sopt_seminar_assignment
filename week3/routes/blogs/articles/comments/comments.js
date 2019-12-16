@@ -5,7 +5,7 @@ const statusCode = require('../../../../module/statusCode');
 const responseMessage = require('../../../../module/responseMessage');
 const Comment = require('../../../../model/comment');
 
-//article 작성
+//comment 작성
 router.post('/', (req, res) => {
     const {comContent, comWriterIdx} = req.body;
     const {articleIdx} = req.params;
@@ -16,6 +16,76 @@ router.post('/', (req, res) => {
         return;
     }
     Comment.create({comContent, comWriterIdx, articleIdx})
+    .then(({code, json}) => {
+        res.status(code).send(json);
+    }).catch(err => {
+        console.log(err);
+        res.status(statusCode.INTERNAL_SERVER_ERROR).send(responseMessage.INTERNAL_SERVER_ERROR);
+    });
+});
+
+//해당 아티클에서의 모든 댓글 조회
+router.get('/', (req, res)=>{
+    const {articleIdx} = req.params;
+    if(!articleIdx){
+        res.status(statusCode.BAD_REQUEST)
+        .send(authUtil.successFalse(responseMessage.NULL_VALUE));
+        return;
+    }
+    Comment.readAll({articleIdx})
+    .then(({code, json}) => {
+        res.status(code).send(json);
+    }).catch(err => {
+        console.log(err);
+        console.log(blogIdx);
+        res.status(statusCode.INTERNAL_SERVER_ERROR).send(responseMessage.INTERNAL_SERVER_ERROR);
+    });
+});
+/*
+//특정 사람이 쓴 댓글 조회
+router.get('/', (req, res)=>{
+    const {blogIdx, articleIdx} = req.params;
+    if(!blogIdx || !articleIdx){
+        res.status(statusCode.BAD_REQUEST)
+        .send(authUtil.successFalse(responseMessage.NULL_VALUE));
+        return;
+    }
+    Article.read({blogIdx, articleIdx})
+    .then(({code, json}) => {
+        res.status(code).send(json);
+    }).catch(err => {
+        console.log(err);
+        res.status(statusCode.INTERNAL_SERVER_ERROR).send(responseMessage.INTERNAL_SERVER_ERROR);
+    });
+});*/
+
+//comment 수정
+router.put('/', (req, res) => {
+    const {commentIdx, comContent, comWriterIdx} = req.body;
+    
+    if(!commentIdx || !comContent || !comWriterIdx){
+        res.status(statusCode.BAD_REQUEST)
+        .send(authUtil.successFalse(responseMessage.NULL_VALUE));
+        return;
+    }
+    Comment.update({commentIdx, comContent, comWriterIdx})
+    .then(({code, json}) => {
+        res.status(code).send(json);
+    }).catch(err => {
+        console.log(err);
+        res.status(statusCode.INTERNAL_SERVER_ERROR).send(responseMessage.INTERNAL_SERVER_ERROR);
+    });
+});
+
+//comment 삭제
+router.delete('/', (req, res) => {
+    const {commentIdx} = req.body;
+    if(!commentIdx){
+        res.status(statusCode.BAD_REQUEST)
+        .send(authUtil.successFalse(responseMessage.NULL_VALUE));
+        return;
+    }
+    Comment.delete({commentIdx})
     .then(({code, json}) => {
         res.status(code).send(json);
     }).catch(err => {

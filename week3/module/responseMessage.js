@@ -22,5 +22,7 @@ module.exports = {
     UPDATE_ARTICLE_SUCCESS: "아티클 수정 성공",
     DELETE_ARTICLE_SUCCESS: "아티클 삭제 성공",
     CREATE_COMMENT_FAIL: "댓글 작성 실패",
-    CREATE_COMMENT_SUCCESS: "댓글 작성 성공"
+    CREATE_COMMENT_SUCCESS: "댓글 작성 성공",
+    UPDATE_COMMENT_SUCCESS: "댓글 수정 성공",
+    DELETE_COMMENT_SUCCESS: "댓글 삭제 성공"
 }
