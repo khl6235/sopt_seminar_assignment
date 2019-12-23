@@ -8,6 +8,9 @@ var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 
 var app = express();
+// app.listen(8000, function(){
+//   console.log('app listening on port 8000!');
+// });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

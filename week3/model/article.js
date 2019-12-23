@@ -3,14 +3,20 @@ const statusCode = require('../module/statusCode');
 const responseMessage = require('../module/responseMessage');
 const pool = require('../module/poolAsync');
 
+const table = 'article';
+
 const article = {
     //article 생성
-    create: ({title, content, blogIdx}) => {
-        const table = 'article';
-        const fields = 'title, content, blogIdx';
-        const questions = `'${title}', '${content}', '${blogIdx}'`;//?, ?, ?
+    create: ({title, content, blogIdx, image}) => {
+        
+        // const imageArr = [];
+        // for(var i in image.file){
+        //     imageArr.push(JSON.stringify(image.file[i].location));
+        // }
+        const fields = 'title, content, blogIdx, image';
+        const questions = `'${title}', '${content}', '${blogIdx}', '${image}'`;//?, ?, ?
         const query = `INSERT INTO ${table} (${fields}) VALUES(${questions})`;
-        const values = [title, content, blogIdx];
+        const values = [title, content, blogIdx, image];
 
         return pool.queryParam_None(query)
         .then(result => {

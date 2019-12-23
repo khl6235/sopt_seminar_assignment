@@ -5,6 +5,10 @@ const statusCode = require('../../../module/statusCode');
 const responseMessage = require('../../../module/responseMessage');
 const Article = require('../../../model/article');
 
+// const multer = require('multer');
+// const upload = multer({dest: 'uploads/'});
+const upload = require('../../../config/multer');
+
 //특정 blogIdx의 모든 article 조회 
 router.get('/', (req, res)=>{
     const {blogIdx} = req.params;
@@ -40,16 +44,20 @@ router.get('/:articleIdx', (req, res)=>{
 });
 
 //article 작성
-router.post('/', (req, res) => {
+router.post('/', upload.array('image', 3), (req, res) => {
     const {title, content} = req.body;
     const {blogIdx} = req.params;
+    const image = {file: req.files};
 
     if(!title || !content || !blogIdx){
         res.status(statusCode.BAD_REQUEST)
         .send(authUtil.successFalse(responseMessage.NULL_VALUE));
         return;
     }
-    Article.create({title, content, blogIdx})
+    
+    //for(var i in image.file.length)
+
+    Article.create({title, content, blogIdx, image})
     .then(({code, json}) => {
         res.status(code).send(json);
     }).catch(err => {
